@@ -3,6 +3,9 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 const xml2js = require('xml2js');
 const moment = require('moment');
+const userDate = req.body.queryResult.parameters.date;
+const today = userDate ? moment(userDate).format('YYYYMMDD') : moment().format('YYYYMMDD');
+
 
 const app = express();
 app.use(bodyParser.json());
