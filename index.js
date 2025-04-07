@@ -3,15 +3,14 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 const xml2js = require('xml2js');
 const moment = require('moment');
-const userDate = req.body.queryResult.parameters.date;
-const today = userDate ? moment(userDate).format('YYYYMMDD') : moment().format('YYYYMMDD');
-
 
 const app = express();
 app.use(bodyParser.json());
 
 app.post('/webhook', async (req, res) => {
-  const today = moment().format('YYYYMMDD');
+  const userDate = req.body.queryResult.parameters.date;
+  const today = userDate ? moment(userDate).format('YYYYMMDD') : moment().format('YYYYMMDD');
+
   const url = `https://open.neis.go.kr/hub/mealServiceDietInfo?ATPT_OFCDC_SC_CODE=J10&SD_SCHUL_CODE=7531246&MLSV_YMD=${today}`;
 
   try {
