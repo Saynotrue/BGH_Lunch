@@ -78,7 +78,7 @@ app.post('/webhook', async (req, res) => {
     {
       text: {
         text: [
-          `📚 ${grade} ${class_}반 시간표 (${moment(parsedDate, 'YYYYMMDD').format('YYYY년 M월 D일')}):\n${subjects}`
+          `📚 ${grade} ${class_} 시간표 (${moment(parsedDate, 'YYYYMMDD').format('YYYY년 M월 D일')}):\n${subjects}`
         ]
       }
     }
