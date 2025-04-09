@@ -28,11 +28,11 @@ app.post('/webhook', async (req, res) => {
       const cleaned = dishName.replace(/\([^\)]*\)/g, '').replace(/<br\/?>/gi, '\n').trim();
       const calText = cal ? `\n\n총 칼로리: ${cal}` : '';
       return res.json({
-        fulfillmentText: `🍱 오늘의 급식:\n${cleaned}${calText}`,
+        fulfillmentText: `🍱 급식 메뉴:\n${cleaned}${calText}`,
       });
     } else {
       return res.json({
-        fulfillmentText: '오늘은 급식 정보가 없어요 😢',
+        fulfillmentText: '급식 정보가 없어요 😢',
       });
     }
   } catch (err) {
