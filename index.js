@@ -1,4 +1,4 @@
-const express = require('express');
+ㅍㅍconst express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
 const xml2js = require('xml2js');
@@ -47,24 +47,15 @@ app.post('/webhook', async (req, res) => {
   }
 
   if (intent === 'Schedule') {
-  const { grade, class: class_ } = req.body.queryResult.parameters;
-
-  let dateParam = req.body.queryResult.parameters.date;
-  let parsedDate;
-
-  if (typeof dateParam === 'string') {
-    parsedDate = moment(dateParam).format('YYYYMMDD');
-  } else if (typeof dateParam === 'object' && dateParam?.startDateTime) {
-    parsedDate = moment(dateParam.startDateTime).format('YYYYMMDD');
-  } else {
-    parsedDate = moment().format('YYYYMMDD');
-  }
-
+  const { date, grade, class: class_ } = req.body.queryResult.parameters;
+  const parsedDate = date ? moment(date).format('YYYYMMDD') : moment().format('YYYYMMDD');
+    
+    // 숫자만 추출
   const gradeNum = grade.replace(/[^0-9]/g, '');
   const classNum = class_.replace(/[^0-9]/g, '');
 
   const url = `https://open.neis.go.kr/hub/hisTimetable?ATPT_OFCDC_SC_CODE=J10&SD_SCHUL_CODE=7531246&AY=2025&SEM=1&ALL_TI_YMD=${parsedDate}&GRADE=${gradeNum}&CLASS_NM=${classNum}`;
-    
+
   try {
     const response = await axios.get(url);
     const xml = response.data;
