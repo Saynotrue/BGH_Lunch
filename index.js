@@ -49,6 +49,10 @@ app.post('/webhook', async (req, res) => {
   if (intent === 'Schedule') {
   const { date, grade, class: class_ } = req.body.queryResult.parameters;
   const parsedDate = date ? moment(date).format('YYYYMMDD') : moment().format('YYYYMMDD');
+    
+    // 숫자만 추출
+  const gradeNum = grade.replace(/[^0-9]/g, '');
+  const classNum = class_.replace(/[^0-9]/g, '');
 
   const url = `https://open.neis.go.kr/hub/hisTimetable?ATPT_OFCDC_SC_CODE=J10&SD_SCHUL_CODE=7531246&AY=2025&SEM=1&ALL_TI_YMD=${parsedDate}&GRADE=${grade}&CLASS_NM=${class_}`;
 
