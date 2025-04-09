@@ -84,6 +84,7 @@ app.post('/webhook', async (req, res) => {
   return res.json({
     fulfillmentText: '요청을 이해하지 못했어요.',
   });
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
