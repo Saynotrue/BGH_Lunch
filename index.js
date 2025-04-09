@@ -74,8 +74,16 @@ app.post('/webhook', async (req, res) => {
       : `${rows.PERIO}교시: ${rows.ITRT_CNTNT}`;
 
     return res.json({
-      fulfillmentText: `📚 ${grade}학년 ${class_}반 시간표 (${moment(parsedDate, 'YYYYMMDD').format('YYYY년 M월 D일')}):\n${subjects}`,
-    });
+  fulfillmentMessages: [
+    {
+      text: {
+        text: [
+          `📚 ${grade}학년 ${class_}반 시간표 (${moment(parsedDate, 'YYYYMMDD').format('YYYY년 M월 D일')}):\n${subjects}`
+        ]
+      }
+    }
+  ]
+});
   } catch (err) {
     console.error(err);
     return res.json({
