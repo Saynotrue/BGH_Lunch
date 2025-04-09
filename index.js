@@ -47,38 +47,38 @@ app.post('/webhook', async (req, res) => {
   }
 
   if (intent === 'Schedule') {
-    const { date, grade, class: classNum } = req.body.queryResult.parameters;
-    const parsedDate = date ? moment(date).format('YYYYMMDD') : moment().format('YYYYMMDD');
+  const { date, grade, class: class_ } = req.body.queryResult.parameters;
+  const parsedDate = date ? moment(date).format('YYYYMMDD') : moment().format('YYYYMMDD');
 
-    const url = `https://open.neis.go.kr/hub/hisTimetable?ATPT_OFCDC_SC_CODE=J10&SD_SCHUL_CODE=7531246&AY=2025&SEM=1&ALL_TI_YMD=${parsedDate}&GRADE=${grade}&CLASS_NM=${classNum}`;
+  const url = `https://open.neis.go.kr/hub/hisTimetable?ATPT_OFCDC_SC_CODE=J10&SD_SCHUL_CODE=7531246&AY=2025&SEM=1&ALL_TI_YMD=${parsedDate}&GRADE=${grade}&CLASS_NM=${class_}`;
 
-    try {
-      const response = await axios.get(url);
-      const xml = response.data;
-      const parser = new xml2js.Parser({ explicitArray: false, trim: true });
-      const result = await parser.parseStringPromise(xml);
+  try {
+    const response = await axios.get(url);
+    const xml = response.data;
+    const parser = new xml2js.Parser({ explicitArray: false, trim: true });
+    const result = await parser.parseStringPromise(xml);
 
-      const rows = result?.hisTimetable?.row;
-      if (!rows) {
-        return res.json({
-          fulfillmentText: '해당 날짜의 시간표 정보가 없어요 😢',
-        });
-      }
-
-      const subjects = Array.isArray(rows)
-        ? rows.map(r => `${r.PERIO}교시: ${r.ITRT_CNTNT}`).join('\n')
-        : `${rows.PERIO}교시: ${rows.ITRT_CNTNT}`;
-
+    const rows = result?.hisTimetable?.row;
+    if (!rows) {
       return res.json({
-        fulfillmentText: `📚 ${grade}학년 ${classNum}반 시간표 (${parsedDate}):\n${subjects}`,
-      });
-    } catch (err) {
-      console.error(err);
-      return res.json({
-        fulfillmentText: '시간표 정보를 불러오는 중 문제가 생겼어요.',
+        fulfillmentText: '해당 날짜의 시간표 정보가 없어요 😢',
       });
     }
+
+    const subjects = Array.isArray(rows)
+      ? rows.map(r => `${r.PERIO}교시: ${r.ITRT_CNTNT}`).join('\n')
+      : `${rows.PERIO}교시: ${rows.ITRT_CNTNT}`;
+
+    return res.json({
+      fulfillmentText: `📚 ${grade}학년 ${class_}반 시간표 (${moment(parsedDate, 'YYYYMMDD').format('YYYY년 M월 D일')}):\n${subjects}`,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.json({
+      fulfillmentText: '시간표 정보를 불러오는 중 문제가 생겼어요.',
+    });
   }
+}
 
   // 기타 처리되지 않은 인텐트
   return res.json({
