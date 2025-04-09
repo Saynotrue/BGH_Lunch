@@ -47,8 +47,18 @@ app.post('/webhook', async (req, res) => {
   }
 
   if (intent === 'Schedule') {
-  const { date, grade, class: class_ } = req.body.queryResult.parameters;
-  const parsedDate = date ? moment(date).format('YYYYMMDD') : moment().format('YYYYMMDD');
+  const { grade, class: class_ } = req.body.queryResult.parameters;
+
+  let dateParam = req.body.queryResult.parameters.date;
+  let parsedDate;
+
+  if (typeof dateParam === 'string') {
+    parsedDate = moment(dateParam).format('YYYYMMDD');
+  } else if (typeof dateParam === 'object' && dateParam?.startDateTime) {
+    parsedDate = moment(dateParam.startDateTime).format('YYYYMMDD');
+  } else {
+    parsedDate = moment().format('YYYYMMDD');
+  }
     
     // 숫자만 추출
   const gradeNum = grade.replace(/[^0-9]/g, '');
